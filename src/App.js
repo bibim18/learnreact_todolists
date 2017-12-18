@@ -1,4 +1,12 @@
 import React from 'react'
+import styled from 'styled-components'
+
+const Header = styled.div`
+  background: gray;
+  font-size:25px;
+  line-height:40px;
+  
+`
 
 class App extends React.Component {
   state = {
@@ -8,7 +16,7 @@ class App extends React.Component {
     toggleEdit: false,
     statetosave: '',
     todo: '',
-    todolists: ['fff', 'ttt', 'dddd']
+    todolists: []
   }
   changeAdd = (e) => {
     this.setState({ todo: e.target.value })
@@ -18,6 +26,7 @@ class App extends React.Component {
     this.setState({ textEdit: e.target.value })
   }
   handleClick = () => {
+    window.localStorage.setItem('lists', JSON.stringify(this.state.todolists))
     this.setState({ todolists: [...this.state.todolists, this.state.todo] })
   }
   handleToggleEdit = (index) => {
@@ -37,9 +46,18 @@ class App extends React.Component {
   setValueAfterEdit = () => {
     console.log(this.state.todolists[this.state.editIndex])
   }
+  componentDidMount () {
+    let localStorageData = JSON.parse(window.localStorage.getItem('lists'))
+    if (localStorageData) {
+      this.setState({ todolists: localStorageData })
+    }
+  }
   render () {
     return (
       <div>
+        <Header>
+          To-Do-Lists
+        </Header>
         <input type='text' onChange={this.changeAdd} />
         <input type='submit' onClick={this.handleClick} value='submit' />
         {
